@@ -170,7 +170,7 @@ def test(data,
 
             # Assign all predictions as incorrect
             correct = torch.zeros(pred.shape[0], niou, dtype=torch.bool, device=device)
-            if nl:
+            if nl:  # number of labels in the image
                 detected = []  # target indices
                 tcls_tensor = labels[:, 0]
 
@@ -202,6 +202,11 @@ def test(data,
                                     break
 
             # Append statistics (correct, conf, pcls, tcls)
+            #
+            # correct - shape=(predictions, iou thresholds)
+            # conf - confidences, shape=(predictions,)
+            # pred - predictions, shape=(predictions, 6) [[x1, y1, x2, y2, confidence, cls], [...], ...]
+            # tcls - target class,
             stats.append((correct.cpu(), pred[:, 4].cpu(), pred[:, 5].cpu(), tcls))
 
         # Plot images
